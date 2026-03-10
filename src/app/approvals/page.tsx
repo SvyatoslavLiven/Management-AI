@@ -1,0 +1,2 @@
+import { Shell } from '@/components/shell';import { getSessionOrRedirect, prisma, scopedWhere } from '@/server/page-data';
+export default async function Page(){const s=await getSessionOrRedirect();const items=await prisma.approval.findMany({where:{...(await scopedWhere(s.user.role,s.user.propertyId)),status:'pending'}});return <Shell user={s.user}><h1 className='text-xl font-semibold mb-3'>Approvals</h1><div className='card'>{items.map(i=><div key={i.id}>{i.approvalType} - {i.status}</div>)}</div></Shell>}

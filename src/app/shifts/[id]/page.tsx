@@ -1,0 +1,2 @@
+import { Shell } from '@/components/shell';import { getSessionOrRedirect, prisma } from '@/server/page-data';
+export default async function Page({params}:{params:{id:string}}){const s=await getSessionOrRedirect();const item=await prisma.shifts.findUniqueOrThrow({where:{id:params.id}});return <Shell user={s.user}><h1 className='text-xl font-semibold capitalize'>shifts detail</h1><pre className='card mt-3 overflow-auto text-xs'>{JSON.stringify(item,null,2)}</pre></Shell>}
