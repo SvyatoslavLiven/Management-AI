@@ -1,0 +1,1 @@
+export function Topbar({name,role}:{name?:string|null;role?:string}){return <header className='bg-white border-b p-3 flex justify-between'><div>Operations Platform</div><div className='text-sm'>{name} ({role})</div></header>;}

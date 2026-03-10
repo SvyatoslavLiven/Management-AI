@@ -1,0 +1,2 @@
+import Link from 'next/link';import { Shell } from '@/components/shell';import { getSessionOrRedirect, prisma, scopedWhere } from '@/server/page-data';
+export default async function Page(){const s=await getSessionOrRedirect();const items=await prisma.property.findMany({where:await scopedWhere(s.user.role,s.user.propertyId)});return <Shell user={s.user}><h1 className='text-xl font-semibold mb-3'>Properties</h1><div className='card'>{items.map(i=><div key={i.id}><Link href={`/properties/${i.id}`}>{i.name}</Link></div>)}</div></Shell>}

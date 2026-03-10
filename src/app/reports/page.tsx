@@ -1,0 +1,2 @@
+import { Shell } from '@/components/shell';import { getSessionOrRedirect, prisma, scopedWhere } from '@/server/page-data';
+export default async function Page(){const s=await getSessionOrRedirect();const items=await prisma.report.findMany({where:await scopedWhere(s.user.role,s.user.propertyId)});return <Shell user={s.user}><h1 className='text-xl font-semibold mb-3'>Reports</h1><div className='card'>{items.map(i=><div key={i.id}>{i.type} - {i.status}</div>)}</div></Shell>}

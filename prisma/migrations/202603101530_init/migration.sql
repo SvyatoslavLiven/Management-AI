@@ -1,0 +1,2 @@
+-- Run `npx prisma migrate dev --name init` to generate SQL from prisma/schema.prisma.
+-- This placeholder exists because dependency install is required to materialize SQL.

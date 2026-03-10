@@ -1,0 +1,5 @@
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { auth } from '@/lib/auth';import { prisma } from '@/lib/db';import { canApprove } from '@/lib/rbac';
+const schema=z.object({decision:z.enum(['approved','rejected']),comment:z.string().optional()});
+export async function POST(req:Request,{params}:{params:{id:string}}){const s=await auth();if(!s?.user)return NextResponse.json({error:'unauthorized'},{status:401});if(!canApprove({id:s.user.id,employeeId:s.user.employeeId,role:s.user.role as any,propertyId:s.user.propertyId}))return NextResponse.json({error:'forbidden'},{status:403});const body=schema.parse(await req.json());const appr=await prisma.approval.update({where:{id:params.id},data:{status:body.decision,decidedAt:new Date(),comment:body.comment}});if(appr.entityType==='Action'&&body.decision==='approved'){await prisma.action.update({where:{id:appr.entityId},data:{approvalStatus:'approved',status:'done'}});}await prisma.activityLog.create({data:{employeeId:s.user.employeeId,entityType:'Approval',entityId:appr.id,actionType:'decision',newValue:appr as any}});return NextResponse.json(appr)}
